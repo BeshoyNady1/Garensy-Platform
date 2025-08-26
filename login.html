@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>نسيت كلمة المرور</title>
+        <style>
+            body {
+                font-family: "Arial";
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+            .popup {
+                background: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid #8a4af3;
+                width: 300px;
+                text-align: center;
+                position: relative;
+            }
+            h2 {
+                color: #4a2c8a;
+                margin: 0 0 10px;
+                font-size: 24px;
+            }
+            input {
+                width: 80%;
+                padding: 10px;
+                margin: 10px 0;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            button {
+                width: 80%;
+                padding: 10px;
+                margin: 5px 0;
+                background: #8a4af3;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .timer {
+                color: #4a2c8a;
+                font-size: 14px;
+            }
+            .disabled {
+                opacity: 0.5;
+                pointer-events: none;
+                background: #ccc;
+            }
+            .close {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                cursor: pointer;
+                font-size: 20px;
+                color: #4a2c8a;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="popup">
+            <span
+                class="close"
+                onclick="this.parentElement.style.display='none'"
+                >&times;</span
+            >
+            <h2>تسجيل الدخول</h2>
+            <p>تم إرسال رمز إلى بريدك الإلكتروني</p>
+            <input
+                type="text"
+                id="codeInput"
+                placeholder="أدخل الرمز المرسل"
+                style="direction: ltr"
+            />
+            <br /><span id="timer" class="timer"></span><br />
+            <button id="verifyButton" disabled>تأكيد</button><br />
+            <button id="resendButton" class="disabled" onclick="resendCode()">
+                إرسال رمز آخر
+            </button>
+        </div>
+
+        <script>
+            let timeLeft = 60;
+            const timerDisplay = document.getElementById("timer");
+            const verifyButton = document.getElementById("verifyButton");
+            const resendButton = document.getElementById("resendButton");
+            let timer;
+
+            function startTimer() {
+                timer = setInterval(() => {
+                    timeLeft--;
+                    timerDisplay.textContent = `(${timeLeft} ثانية)`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        timerDisplay.textContent = "";
+                        verifyButton.disabled = true;
+                        resendButton.classList.remove("disabled");
+                    } else if (timeLeft <= 10) {
+                        verifyButton.disabled = false;
+                    }
+                }, 1000);
+            }
+
+            function resendCode() {
+                if (!resendButton.classList.contains("disabled")) {
+                    timeLeft = 60;
+                    timerDisplay.textContent = `(${timeLeft} ثانية)`;
+                    verifyButton.disabled = true;
+                    resendButton.classList.add("disabled");
+                    startTimer();
+                    // Logic to resend code can be added here
+                }
+            }
+
+            startTimer();
+        </script>
+    </body>
+</html>
