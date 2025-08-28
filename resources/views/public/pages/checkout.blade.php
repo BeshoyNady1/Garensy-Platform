@@ -53,7 +53,11 @@
                                             <div
                                                 class="order-item-price  {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}">
                                                 <span class="quantity">* {{ $cartItem->qty }}</span>
-                                                <span class="price">${{ number_format($cartItem->price, 2) }}</span>
+
+                                                <span class="price">
+                                                    <span class="riyal-heading"></span>
+                                                    {{ number_format($cartItem->price, 2) }}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -65,7 +69,7 @@
                                 <div
                                     class="order-total d-flex justify-content-between {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}">
                                     <span> @lang('global.total') </span>
-                                    <span>$ {{ $total }} </span>
+                                    <span><span class="riyal-heading"></span> {{ $total }} </span>
                                 </div>
                             </div>
 
@@ -215,7 +219,8 @@
                                         <button type="submit"
                                             class="btn btn-primary place-order-btn {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}">
                                             <span class="btn-text"> @lang('global.place_order') </span>
-                                            <span class="btn-price">$ {{ $total }} </span>
+                                            <span class="btn-price"><span class="riyal-heading"></span>
+                                                {{ $total }} </span>
                                         </button>
                                     </div>
                                 </div>
@@ -230,26 +235,34 @@
                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                        <div class="modal-header {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}">
+                            <h5 class="modal-title" id="termsModalLabel">الشروط والأحكام</h5>
                         </div>
-                        <div class="modal-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus
-                                hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend
-                                nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis
-                                nisl tempor.</p>
-                            <p>Suspendisse in orci enim. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque
-                                eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non
-                                est bibendum non venenatis nisl tempor.</p>
-                            <p>Suspendisse in orci enim. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque
-                                eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non
-                                est bibendum non venenatis nisl tempor.</p>
+                        <div class="modal-body {{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                            <h6>1. الموافقة على الشروط</h6>
+                            <p>باستخدامك لهذه المنصة، فإنك توافق على الالتزام التام بهذه الشروط والأحكام. يرجى قراءتها
+                                بعناية قبل إجراء أي حجز أو استخدام للخدمات. إذا كنت لا توافق على هذه الشروط، يرجى عدم
+                                استخدام المنصة.</p>
+
+                            <h6>2. صحة البيانات</h6>
+                            <p>أنت مسؤول عن تقديم بيانات دقيقة وكاملة أثناء عملية الحجز، بما في ذلك الفترة الزمنية، المدينة،
+                                وأي تفاصيل أخرى مطلوبة. المنصة غير مسؤولة عن أي أخطاء ناتجة عن تقديم بيانات غير صحيحة.</p>
+
+                            <h6>3. سياسة الحجز</h6>
+                            <p>جميع الحجوزات تخضع لتوافر الخدمات في المدينة والفترة الزمنية المحددة. لا يُسمح بتداخل
+                                الحجوزات مع طلبات أخرى لنفس الخدمة في نفس الفترة الزمنية.</p>
+
+                            <h6>4. الإلغاء والتعديل</h6>
+                            <p>يمكن إلغاء أو تعديل الحجز وفقًا لسياسة الإلغاء الخاصة بالمنصة. يجب تقديم طلبات الإلغاء أو
+                                التعديل قبل موعد الحجز بمدة كافية، وتخضع لرسوم محتملة حسب نوع الخدمة.</p>
+
+                            <h6>5. المسؤولية</h6>
+                            <p>المنصة غير مسؤولة عن أي أضرار أو خسائر تنتج عن سوء استخدام الخدمات أو عدم الالتزام بالشروط.
+                                يتحمل المستخدم المسؤولية الكاملة عن أي عواقب ناتجة عن استخدامه للمنصة.</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"> @lang('global.i_understand')
-                            </button>
+                            <button type="button" class="btn btn-primary"
+                                data-bs-dismiss="modal">@lang('global.i_understand')</button>
                         </div>
                     </div>
                 </div>

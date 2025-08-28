@@ -1,5 +1,0 @@
-select these one by one:
-    1- main services
-    2- sub service
-    3- select day
-    4- Select a professional and select time

@@ -6,10 +6,10 @@
     <!-- Breadcrumb Section Begin -->
     <div class="page-title light-background">
         <div class="container d-lg-flex justify-content-between align-items-center">
-            <h1 class="mb-2 mb-lg-0"> {{ app()->getLocale() == 'ar' ? $serviceNameAr : $serviceNameEn }} </h1>
+            <h1 class="mb-2 mb-lg-0"> {{ app()->getLocale() == 'ar' ? $service->name_ar : $service->name_en }} </h1>
             <nav class="breadcrumbs">
                 <ol>
-                    <li class="current"> {{ app()->getLocale() == 'ar' ? $serviceNameAr : $serviceNameEn }} </li>
+                    <li class="current"> {{ app()->getLocale() == 'ar' ? $service->name_ar : $service->name_en }} </li>
                     <li> @lang('global.Services') </li>
                     <li> @lang('global.Categories') </li>
                     <li><a href="{{ route('home') }}"> @lang('global.Home') </a></li>
@@ -22,7 +22,18 @@
 
 @section('styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .favorite-btn {
+            background-color: red !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+        }
 
+        .riyal-heading::before {
+            width: 23px;
+            height: 46px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -34,9 +45,9 @@
                     <div class="product-gallery">
                         <div class="main-showcase">
                             <div class="image-zoom-container">
-                                <img src="{{ asset('' . $mainImage->src) }}" alt="Product Main"
+                                <img src="{{ asset('' . $service->image_src) }}" alt="Product Main"
                                     class="img-fluid main-product-image drift-zoom" id="main-product-image"
-                                    data-zoom="{{ asset('' . $mainImage->src) }}">
+                                    data-zoom="{{ asset('' . $service->image_src) }}">
 
                                 <div class="image-navigation">
                                     <button class="nav-arrow prev-image image-nav-btn prev-image" type="button">
@@ -84,6 +95,7 @@
                         <div class="pricing-section">
                             <div class="price-display  {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}">
                                 <span class="sale-price">{{ $service->price }}</span>
+                                <span class="riyal-heading"></span>
                             </div>
                         </div>
                         <div class="product-description">
@@ -139,8 +151,9 @@
                                     <i class="bi bi-lightning"></i>
                                     @lang('global.buy_now')
                                 </button>
-                                <button class="btn icon-action Add_Wishlist" id="Add_Wishlist" title="Add to Wishlist"
-                                    data-id="{{ $service->id }}">
+                                <button
+                                    class="btn icon-action Add_Wishlist {{ $service->favorite != null ? 'favorite-btn' : '' }}"
+                                    id="Add_Wishlist" title="Add to Wishlist" data-id="{{ $service->id }}">
                                     <i class="bi bi-heart"></i>
                                 </button>
                             </div>
@@ -148,7 +161,7 @@
 
                         <!-- Benefits List -->
                         <div class="benefits-list">
-                            @foreach ($service->features as $feature)
+                            @foreach ($features->features as $feature)
                                 <div
                                     class="benefit-item {{ app()->getLocale() == 'ar' ? 'flex-row-reverse text-end' : 'flex-row' }}">
                                     <i class="bi bi-check-circle"></i>
@@ -192,7 +205,7 @@
                                                 class="package-contents {{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
                                                 <h4> @lang('global.service_features') </h4>
                                                 <ul class="contents-list">
-                                                    @foreach ($service->features as $feature)
+                                                    @foreach ($features->features as $feature)
                                                         <li
                                                             class="{{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}">
                                                             <i class="bi bi-check-circle"></i>
@@ -460,6 +473,7 @@
             if (checkAuth == 0) {
                 window.location.href = "{{ route('page.login') }}";
             } else {
+                let $button = $(this);
                 let service_id = $(this).attr('data-id');
                 let url = "{{ route('favorites.store') }}";
                 axios.post(url, {
@@ -467,6 +481,9 @@
                     service_id: service_id
                 }).then(response => {
                     if (response.data.success) {
+                        response.data.action == 'remove' ? $button.removeClass("favorite-btn") : $button
+                            .addClass("favorite-btn");
+
                         updateWishList(response.data.userWishListCount);
                         toastr.success(response.data.message);
                     } else {

@@ -41,8 +41,33 @@ if (auth()->check()) {
         <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
 
         <style>
+            #profileImage {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+
             .footer-contact {
                 {{ app()->getLocale() == 'ar' ? 'direction: rtl;' : '' }}
+            }
+
+            .riyal-heading {
+                position: relative;
+                font-size: 18px;
+                padding-left: 20px;
+            }
+
+            .riyal-heading::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 16px;
+                height: 16px;
+                background-image: url('{{ asset('assets/img/icons/sar_image.ico') }}');
+                background-size: contain;
+                background-repeat: no-repeat;
             }
         </style>
 

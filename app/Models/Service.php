@@ -58,4 +58,9 @@ class Service extends Model
     {
         return $this->hasMany(ServiceFeature::class);
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'service_id', 'id');
+    }
 }

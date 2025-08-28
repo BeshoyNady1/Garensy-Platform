@@ -42,4 +42,9 @@ class Package extends Model
     {
         return $this->belongsToMany(City::class);
     }
+
+    public function favorite()
+    {
+        return $this->hasOne(Favorite::class)->where('user_id', auth()->user()->id ?? null);
+    }
 }

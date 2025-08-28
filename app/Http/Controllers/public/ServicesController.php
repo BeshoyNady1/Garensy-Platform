@@ -7,26 +7,27 @@ use App\Models\Cart;
 use App\Models\City;
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\ServiceImage;
+use App\Traits\servicesTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ServicesController extends Controller
 {
+    use servicesTrait;
     public function show($id)
     {
-        $services = Service::where('category_id', $id)->with('hasImages')->get();
+        $services = $this->getServices($id);
         return view("public.pages.services", compact("services"));
     }
 
     public function details($id)
     {
-        $service = Service::where('id', $id)->with(['hasImages', 'features'])->first();
-        $serviceNameAr = $service->name_ar;
-        $serviceNameEn = $service->name_en;
-        $images = $service->hasImages()->get();
-        $mainImage = $service->hasImages()->first();
-        $category = app()->getLocale() == "ar" ? $service->category->name_ar : $service->category->name_en;
+        $service = $this->getService($id);
+        $images = ServiceImage::where('service_id', $id)->get();
+        $features = Service::with('features')->find($id);
+        $category = app()->getLocale() == "ar" ? Service::find($id)->category->name_ar : Service::find($id)->category->name_en;
         $cities = City::select('cities.id', 'cities.name_ar', 'cities.name_en')
             ->join('service_cities', 'cities.id', '=', 'service_cities.city_id')
             ->where('service_cities.service_id', $id)
@@ -34,15 +35,7 @@ class ServicesController extends Controller
 
         return view(
             "public.pages.showService",
-            compact(
-                "service",
-                "serviceNameAr",
-                "serviceNameEn",
-                "images",
-                "mainImage",
-                "category",
-                "cities"
-            )
+            get_defined_vars()
         );
     }
 
@@ -67,6 +60,13 @@ class ServicesController extends Controller
             $parts = explode(' to ', $request->daterange);
             $startDate = $parts[0];
             $endDate = $parts[1];
+
+            if ($this->checkIfServiceAleadyReserved($request->service_id, $parts[0], $parts[1]) != null) {
+                return [
+                    'success' => false,
+                    'message' => trans('validation.service_already_reserved'),
+                ];
+            }
 
             Cart::create([
                 'user_id' => auth()->user()->id,

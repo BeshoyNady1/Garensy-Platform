@@ -65,37 +65,38 @@
                                         <i class="bi bi-eye"></i>
                                     </span> --}}
                                 </div>
+                            </form>
 
-                                <div class="form-options mb-4">
-                                    <div class="remember-me">
-                                        <input type="checkbox" name="remember" id="rememberLogin">
-                                        <label for="rememberLogin"> @lang('global.Remember_Me') </label>
-                                    </div>
-                                    <button class="btn btn-link forgot-password switch-forgot-password">
-                                        @lang('global.forgot_password') </button>
+                            <div class="form-options mb-4">
+                                <div class="remember-me">
+                                    <input type="checkbox" name="remember" id="rememberLogin">
+                                    <label for="rememberLogin"> @lang('global.Remember_Me') </label>
                                 </div>
+                                <button class="btn btn-link forgot-password switch-forgot-password">
+                                    @lang('global.forgot_password') </button>
+                            </div>
 
-                                <button type="button" class="auth-btn submit primary-btn mb-3">
-                                    @lang('global.sign_in')
-                                    <i class="bi bi-arrow-right"></i>
-                                </button>
+                            <button type="button" class="auth-btn submit primary-btn mb-3">
+                                @lang('global.sign_in')
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
 
-                                <div class="divider">
-                                    <span> @lang('global.or') </span>
-                                </div>
+                            <div class="divider">
+                                <span> @lang('global.or') </span>
+                            </div>
 
-                                {{-- <button type="button" class="auth-btn social-btn">
+                            {{-- <button type="button" class="auth-btn social-btn">
                                             <i class="bi bi-google"></i>
                                             Continue with Google
                                         </button> --}}
 
-                                <div class="switch-form">
-                                    <span> @lang('global.dont_have_account') </span>
-                                    <button type="button" class="switch-btn switch-register">
-                                        @lang('global.create_account')
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="switch-form">
+                                <span> @lang('global.dont_have_account') </span>
+                                <button type="button" class="switch-btn switch-register">
+                                    @lang('global.create_account')
+                                </button>
+                            </div>
+
                         </div>
 
                         <!-- Register Form -->

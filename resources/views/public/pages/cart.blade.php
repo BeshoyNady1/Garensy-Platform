@@ -86,7 +86,9 @@
                                     </div>
                                     <div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
                                         <div class="price-tag">
+                                            <span class="riyal-heading"></span>
                                             <span class="current-price">${{ number_format($service->price, 2) }}</span>
+
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
@@ -104,6 +106,7 @@
                                     </div>
                                     <div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
                                         <div class="item-total">
+                                            <span class="riyal-heading"></span>
                                             <span class="item-total-amount"
                                                 data-price="{{ $service->price }}">{{ number_format($service->price * $service->qty, 2) }}</span>
                                         </div>
@@ -142,7 +145,10 @@
                         </div> --}}
                         <div class="summary-total">
                             <span class="summary-label"> @lang('global.total') </span>
-                            <span class="summary-value" id="total">{{ number_format($subtotal, 2) }}</span>
+                            <span class="summary-value" id="total">
+                                <span class="riyal-heading"></span>
+                                {{ number_format($subtotal, 2) }}
+                            </span>
                         </div>
                         <div class="checkout-button">
                             <a href="{{ route('checkout.index') }}" class="btn btn-accent w-100">

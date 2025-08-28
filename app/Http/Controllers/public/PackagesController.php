@@ -6,21 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\City;
 use App\Models\Package;
+use App\Traits\packagesTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PackagesController extends Controller
 {
+    use packagesTrait;
     public function index()
     {
-        $packages = Package::with('features', 'images')->get();
+        $packages = Package::with('features', 'images', 'favorite')->get();
         return view("public.pages.packages", compact("packages"));
     }
 
     public function details($id)
     {
-        $package = Package::with('features', 'images')->find($id);
+        $package = Package::with('features', 'images', 'favorite')->find($id);
         $images = $package->images()->get();
         $cities = City::select('cities.id', 'cities.name_ar', 'cities.name_en')
             ->join('package_cities', 'cities.id', '=', 'package_cities.city_id')
@@ -50,6 +52,13 @@ class PackagesController extends Controller
             $parts = explode(' to ', $request->daterange);
             $startDate = $parts[0];
             $endDate = $parts[1];
+
+            if ($this->checkIfPackageAleadyReserved($request->package_id, $parts[0], $parts[1]) != null) {
+                return [
+                    'success' => false,
+                    'message' => trans('validation.package_already_reserved'),
+                ];
+            }
 
             Cart::create([
                 'user_id' => auth()->user()->id,

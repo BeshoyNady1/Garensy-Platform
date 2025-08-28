@@ -65,6 +65,12 @@ return [
     "package_and_service_conflict" => "لا يمكن إدخال الباقة والخدمة في نفس الوقت",
     "invalid_input" => "قيمة غير صحيحة",
 
+    "daterange_overlaps" => "التاريخ غير متوافق",
+    "invalid_daterange_format" => "صيغة التاريخ غير صحيحة",
+    "start_date_after_end_date" => "تاريخ البدء يجب أن يكون أكبر من تاريخ النهاية",
+    "package_already_reserved" => "الباقة محجوزة بالفعل",
+    "service_already_reserved" => "الخدمة محجوزة بالفعل",
+
 
     'accepted' => "ال :attribute يجب قبوله",
     'accepted_if' => "ال :attribute يجب قبوله إذا كان :other يساوي :value",

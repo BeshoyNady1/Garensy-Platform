@@ -10,6 +10,7 @@ use App\Http\Controllers\public\FavoriteController;
 use App\Http\Controllers\public\HomeController;
 use App\Http\Controllers\public\PackagesController;
 use App\Http\Controllers\public\PrivacyAndPolicyController;
+use App\Http\Controllers\public\ProfileController;
 use App\Http\Controllers\public\ServicesController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,19 @@ Route::group(['middleware' => ['lang']], function () {
         Route::post('/order', [ServicesController::class, 'order'])->name("order"); // services.order
     });
 
+    Route::get('/categories', [CategoriesController::class, 'index'])->name("categories");
+
+    Route::get('/privacy-policy', [PrivacyAndPolicyController::class, 'index'])->name("privacyPolicy");
+
+    Route::get('/contact', [ContactController::class, 'index'])->name("contact");
+
+    Route::group(['prefix' => 'Packages', 'as' => 'packages.'], function () {
+        Route::get('/', [PackagesController::class, 'index'])->name("index"); // packages.index
+        Route::get('details/{id}', [PackagesController::class, 'details'])->name("details");
+        Route::post('/order', [PackagesController::class, 'order'])->name("order"); // packages.order
+    });
+
+
     Route::group(['prefix' => 'Favorites', 'as' => 'favorites.'], function () {
         Route::post('/store', [FavoriteController::class, 'store'])->name("store"); // favorites.store
     });
@@ -54,20 +68,11 @@ Route::group(['middleware' => ['lang']], function () {
         Route::post('/remove-all', [CheckoutController::class, 'removeAll'])->name("removeAll"); // checkout.removeAll
     });
 
-    Route::get('/categories', [CategoriesController::class, 'index'])->name("categories");
-
-    Route::get('/privacy-policy', [PrivacyAndPolicyController::class, 'index'])->name("privacyPolicy");
-
-    Route::get('/contact', [ContactController::class, 'index'])->name("contact");
-
-    Route::group(['prefix' => 'Packages', 'as' => 'packages.'], function () {
-        Route::get('/', [PackagesController::class, 'index'])->name("index"); // packages.index
-        Route::get('details/{id}', [PackagesController::class, 'details'])->name("details");
-        Route::post('/order', [PackagesController::class, 'order'])->name("order"); // packages.order
+    Route::group(['prefix' => 'Profile', 'as' => 'profile.'], function () {
+        Route::get('/{page}', [ProfileController::class, 'index'])->name("index"); // profile.index
+        Route::post('/store', [ProfileController::class, 'store'])->name("store"); // profile.store
+        Route::post('/remove-all', [ProfileController::class, 'removeAll'])->name("removeAll"); // profile.removeAll
     });
-
-
-    // packages . details
 
     // Language switch route
     // Route::get('/language/{locale}', function ($locale) {

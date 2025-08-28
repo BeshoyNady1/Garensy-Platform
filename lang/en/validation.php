@@ -64,6 +64,12 @@ return [
     "package_and_service_conflict" => "package and service conflict",
     "invalid_input" => "invalid input",
 
+    "daterange_overlaps" => "daterange overlaps",
+    "invalid_daterange_format" => "invalid daterange format",
+    "start_date_after_end_date" => "start date after end date",
+    "package_already_reserved" => "package already reserved",
+    "service_already_reserved" => "service already reserved",
+
 
     'accepted' => 'The :attribute must be accepted.',
     'accepted_if' => 'The :attribute must be accepted when :other is :value.',

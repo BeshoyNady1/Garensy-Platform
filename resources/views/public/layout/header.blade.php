@@ -32,35 +32,41 @@
                 <!-- Account -->
                 <div class="dropdown account-dropdown">
                     <button class="header-action-btn" data-bs-toggle="dropdown">
-                        <i class="bi bi-person"></i>
+                        {{-- <i class="bi bi-person"></i> --}}
+                        @if (auth()->check())
+                            <img src="{{ asset('' . auth()->user()->image) }}" id="profileImage" alt="">
+                        @else
+                            <i class="bi bi-person"></i>
+                        @endif
+
                     </button>
                     <div class="dropdown-menu">
                         <div class="dropdown-header text-center">
                             @if (auth()->check())
                                 <h6> {{ Auth::user()->name }} </h6>
-                                <p class="mb-0"> @lang('global.client_name') </p>
+                                <p class="mb-0"> @lang('global.' . Auth::user()->role) </p>
                             @else
                                 <p class="mb-0"> @lang('global.unknown') </p>
                             @endif
                         </div>
                         <div class="dropdown-body">
                             <a class="dropdown-item d-flex align-items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}"
-                                href="account.html">
+                                href="{{ route('profile.index', 'settings') }}">
                                 <i class="bi bi-person-circle mlr-5"></i>
                                 <span> @lang('global.my_account') </span>
                             </a>
                             <a class="dropdown-item d-flex align-items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}"
-                                href="account.html">
+                                href="{{ route('profile.index', 'orders') }}">
                                 <i class="bi bi-bag-check mlr-5"></i>
                                 <span> @lang('global.my_orders') </span>
                             </a>
                             <a class="dropdown-item d-flex align-items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}"
-                                href="account.html">
+                                href="{{ route('profile.index', 'wishlist') }}">
                                 <i class="bi bi-heart mlr-5"></i>
                                 <span> @lang('global.my_wishlist')</span>
                             </a>
                             <a class="dropdown-item d-flex align-items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}"
-                                href="account.html">
+                                href="{{ route('profile.index', 'settings') }}">
                                 <i class="bi bi-gear mlr-5"></i>
                                 <span> @lang('global.settings') </span>
                             </a>
@@ -83,12 +89,14 @@
                 </div>
 
                 <!-- Wishlist -->
-                <a href="account.html" class="header-action-btn d-none d-md-block">
+                <a href="{{ auth()->check() ? route('profile.index', 'wishlist') : route('page.login') }}"
+                    class="header-action-btn d-none d-md-block">
                     <i class="bi bi-heart"></i>
                     <span class="badge wishlist-num"> {{ $userWishListCount ?? 0 }} </span>
                 </a>
                 <!-- Cart -->
-                <a href="{{ auth()->check() ? route('carts.index') : route('page.login') }}" class="header-action-btn">
+                <a href="{{ auth()->check() ? route('carts.index', 'orders') : route('page.login') }}"
+                    class="header-action-btn">
                     <i class="bi bi-cart3"></i>
                     <span class="badge cart-num">{{ $cartCount ?? 0 }}</span>
                 </a>

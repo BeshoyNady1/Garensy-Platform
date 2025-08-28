@@ -20,7 +20,13 @@
 @endsection
 
 @section('styles')
-
+    <style>
+        .favorite-btn {
+            background-color: #462956 !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -36,8 +42,8 @@
                                     <div class="product-card" data-aos="zoom-in">
                                         <div class="product-image">
                                             <a href="{{ route('services.details', $service->id) }}">
-                                                <img src="{{ asset('' . $service->hasImages->first()->src) }}"
-                                                    class="" alt="Product" lazyload>
+                                                <img src="{{ asset('' . $service->image_src) }}" class=""
+                                                    alt="Product" lazyload>
                                             </a>
                                         </div>
                                         <div class="product-overlay">
@@ -46,7 +52,8 @@
                                                     data-bs-toggle="tooltip" title="Quick View">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
-                                                <button type="button" class="action-btn Add_Wishlist"
+                                                <button type="button"
+                                                    class="action-btn Add_Wishlist {{ $service->favorite != null ? 'favorite-btn' : '' }}"
                                                     data-id="{{ $service->id }}" data-bs-toggle="tooltip"
                                                     title="Add to Wishlist">
                                                     <i class="bi bi-heart"></i>
@@ -63,12 +70,14 @@
                                                     {{ app()->getLocale() == 'ar' ? $service->name_ar : $service->name_en }}</a>
                                             </h4>
                                             <div class="product-category">
-                                                {{ app()->getLocale() == 'ar' ? $service->category->description_ar : $service->description_en }}
+                                                {{ app()->getLocale() == 'ar' ? $service->description_ar : $service->description_en }}
                                             </div>
                                             <div class="product-meta flex-row-reverse">
                                                 <div class="product-price">
-                                                    $ {{ $service->price }}
+                                                    <span class="riyal-heading"></span>
+                                                    {{ $service->price }}
                                                 </div>
+
                                                 <div class="product-rating">
                                                     <i class="bi bi-star-fill"></i>
                                                     4.9 <span>(56)</span>
@@ -93,6 +102,7 @@
             if (checkAuth == 0) {
                 window.location.href = "{{ route('page.login') }}";
             } else {
+                let $button = $(this);
                 let service_id = $(this).attr('data-id');
                 let url = "{{ route('favorites.store') }}";
                 axios.post(url, {
@@ -100,6 +110,8 @@
                     service_id: service_id
                 }).then(response => {
                     if (response.data.success) {
+                        response.data.action == 'remove' ? $button.removeClass("favorite-btn") : $button
+                            .addClass("favorite-btn");
                         updateWishList(response.data.userWishListCount);
                         toastr.success(response.data.message);
                     } else {

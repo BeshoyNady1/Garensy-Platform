@@ -47,12 +47,30 @@ class FavoriteController extends Controller
         try {
             DB::beginTransaction();
 
-            // Create or retrieve the favorite
-            $favorite = Favorite::firstOrCreate([
-                'user_id' => auth()->id(),
-                'package_id' => $request->package_id ?? null,
-                'service_id' => $request->service_id ?? null,
-            ]);
+            // Check if favorite exists
+            $exists = Favorite::where('user_id', auth()->id())
+                ->where('package_id', $request->package_id ?? null)
+                ->where('service_id', $request->service_id ?? null)
+                ->exists();
+
+            if ($exists) {
+                // If favorite exists, delete it (toggle off)
+                Favorite::where('user_id', auth()->id())
+                    ->where('package_id', $request->package_id ?? null)
+                    ->where('service_id', $request->service_id ?? null)
+                    ->delete();
+
+                $message = trans('global.favorite_removed');
+            } else {
+                // If favorite doesn't exist, create it (toggle on)
+                Favorite::create([
+                    'user_id' => auth()->id(),
+                    'package_id' => $request->package_id ?? null,
+                    'service_id' => $request->service_id ?? null,
+                ]);
+
+                $message = trans('global.favorite_added');
+            }
 
             // Get updated wishlist count
             $userWishListCount = Favorite::where('user_id', auth()->id())->count();
@@ -61,14 +79,15 @@ class FavoriteController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => trans('global.favorite_added'),
+                'message' => $message,
                 'userWishListCount' => $userWishListCount,
+                'action' => $exists ? 'remove' : 'add',
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
 
             // Log the error for debugging
-            Log::error('Failed to add favorite: ' . $e->getMessage(), [
+            Log::error('Failed to process favorite: ' . $e->getMessage(), [
                 'user_id' => auth()->id(),
                 'package_id' => $request->package_id,
                 'service_id' => $request->service_id,

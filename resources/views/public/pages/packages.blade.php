@@ -20,6 +20,12 @@
 
 @section('styles')
     <style>
+        .favorite-btn {
+            background-color: #462956 !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+        }
+
         .product-card {
             {{ app()->getLocale() == 'ar' ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;' }} background-color: #fff;
             border-radius: 10px;
@@ -185,6 +191,7 @@
 @endsection
 
 @section('content')
+    {{-- favorite --}}
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -207,7 +214,8 @@
                                                     data-bs-toggle="tooltip" title="Quick View">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
-                                                <button type="button" class="action-btn Add_Wishlist"
+                                                <button type="button"
+                                                    class="action-btn Add_Wishlist {{ $package->favorite != null ? 'favorite-btn' : '' }}"
                                                     data-id="{{ $package->id }}" data-bs-toggle="tooltip"
                                                     title="Add to Wishlist">
                                                     <i class="bi bi-heart"></i>
@@ -224,7 +232,7 @@
                                                 class="product-meta {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}">
                                                 <div class="product-price">
                                                     {{ $package->price }}
-                                                    {{ app()->getLocale() == 'ar' ? 'ريال' : 'SAR' }}
+                                                    <span class="riyal-heading"></span>
                                                 </div>
                                                 <div class="product-rating">
                                                     <i class="bi bi-star-fill"></i>
@@ -263,6 +271,7 @@
             if (checkAuth == 0) {
                 window.location.href = "{{ route('page.login') }}";
             } else {
+                let $button = $(this);
                 let package_id = $(this).attr('data-id');
                 let url = "{{ route('favorites.store') }}";
                 axios.post(url, {
@@ -270,6 +279,8 @@
                     package_id: package_id
                 }).then(response => {
                     if (response.data.success) {
+                        response.data.action == 'remove' ? $button.removeClass("favorite-btn") : $button
+                            .addClass("favorite-btn");
                         updateWishList(response.data.userWishListCount);
                         toastr.success(response.data.message);
                     } else {

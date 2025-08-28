@@ -21,6 +21,18 @@
 
 @section('styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .favorite-btn {
+            background-color: red !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .riyal-heading::before {
+            width: 23px;
+            height: 46px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -81,7 +93,9 @@
 
                         <div class="pricing-section">
                             <div class="price-display  {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : 'flex-row' }}">
-                                <span class="sale-price">{{ $package->price }}</span>
+
+                                <span class="sale-price"> {{ $package->price }} </span>
+                                <span class="riyal-heading"></span>
                             </div>
                         </div>
                         <div class="product-description">
@@ -137,8 +151,9 @@
                                     <i class="bi bi-lightning"></i>
                                     @lang('global.buy_now')
                                 </button>
-                                <button class="btn icon-action Add_Wishlist" id="Add_Wishlist" title="Add to Wishlist"
-                                    data-id="{{ $package->id }}">
+                                <button
+                                    class="btn icon-action Add_Wishlist  {{ $package->favorite != null ? 'favorite-btn' : '' }}"
+                                    id="Add_Wishlist" title="Add to Wishlist" data-id="{{ $package->id }}">
                                     <i class="bi bi-heart"></i>
                                 </button>
                             </div>
@@ -455,6 +470,7 @@
             if (checkAuth == 0) {
                 window.location.href = "{{ route('page.login') }}";
             } else {
+                let $button = $(this);
                 let service_id = $(this).attr('data-id');
                 let url = "{{ route('favorites.store') }}";
                 axios.post(url, {
@@ -462,6 +478,8 @@
                     service_id: service_id
                 }).then(response => {
                     if (response.data.success) {
+                        response.data.action == 'remove' ? $button.removeClass("favorite-btn") : $button
+                            .addClass("favorite-btn");
                         updateWishList(response.data.userWishListCount);
                         toastr.success(response.data.message);
                     } else {
